@@ -1,2 +1,1 @@
-# cs458project1
-CS458 Project 1
+# CS458-002: Software Validation and Verification Project 1
