@@ -24,8 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     onSignIn(email, password).then(isSignedIn => {
       if (isSignedIn) {
+        console.log(isSignedIn)
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userEmail', email);
+        alert('Successfully logged in.');
         window.location.href = 'success.html'; // Redirect to success page
       } else {
         alert('Invalid email address or password. Please try again.');
@@ -58,7 +60,7 @@ FB.login(function(response) {
 
 window.fbAsyncInit = function() {
 FB.init({
-    appId      : 'FACEBOOK_APP_ID', // TODO: it will be replaced.
+    appId      : '920782009545535D',
     cookie     : true,
     xfbml      : true,
     version    : 'v11.0'
