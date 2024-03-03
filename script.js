@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.querySelector('form');
   form.addEventListener('submit', function(event) {
@@ -5,20 +6,38 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
-    const messageContainer = document.getElementById('message');
 
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
 
-    if (email === 'name@mail.com' && password === 'password') {
-      messageContainer.textContent = 'Login successful!';
-      messageContainer.className = 'success'
-    } else {
-      messageContainer.textContent = 'Invalid email address or password. Please try again.';
-      messageContainer.className = 'error'
+    // Check if any field is empty
+    if (!email || !password) {
+      alert('Please fill in all fields.');
+      return; // Stop the function from proceeding further
     }
+
+    // Validate email format
+    if (!validateEmail(email)) {
+      alert('Please enter a valid email address.');
+      return; // Stop the function from proceeding further
+    }
+
+    onSignIn(email, password).then(isSignedIn => {
+      if (isSignedIn) {
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userEmail', email);
+        window.location.href = 'success.html'; // Redirect to success page
+      } else {
+        alert('Invalid email address or password. Please try again.');
+      }
+    });
   });
 });
+
+function validateEmail(email) {
+  const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  return regex.test(email);
+}
 
 function onGoogleSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
@@ -45,3 +64,13 @@ FB.init({
     version    : 'v11.0'
 });
 };
+
+
+function onSignIn(email, password) {
+  if (email === 'name@mail.com' && password === 'password'){
+    return true
+  }
+  else{
+    return false
+  }
+}
