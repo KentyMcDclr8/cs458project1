@@ -1,70 +1,52 @@
-# Getting Started with Create React App
+# Project Setup and Testing Instructions
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Setup Instructions
 
-## Available Scripts
+### Step 1: Install npm
 
-In the project directory, you can run:
+Ensure that npm is installed on your local machine. If not, install it from [npm's official website](https://www.npmjs.com/get-npm).
 
-### `npm start`
+### Step 2: Install Dependencies
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+After installing npm, run the following command in your project directory to install the necessary dependencies:```npm install```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Step 3: Start the Application
 
-### `npm test`
+To start the application, run: ``` npm start```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### Step 4: Open the Application
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Open a web browser and go to `localhost:3000` to view the application.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Step 5: Testing Credentials
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Use the following credentials for testing:
 
-### `npm run eject`
+- **Email Login:**
+  - EMAIL: `name@mail.com`
+  - PASSWORD: `password`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Google Login:**
+  - GOOGLE_EMAIL: `validationtest542@gmail.com`
+  - GOOGLE_PASSWORD: `thiswillwork`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Running Selenium Tests
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Step 1: Install Selenium and Python
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Ensure that Python and Selenium are installed on your local machine. If not, follow the instructions to install Python from [Python's official website](https://www.python.org/downloads/) and Selenium using pip:```pip install selenium``` 
 
-## Learn More
+### Step 2: Start the Application
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Make sure that your application is running locally by executing: ``` npm start``` 
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Step 3: Run Selenium Tests
 
-### Code Splitting
+Navigate to the directory containing `selenium_tests.py` and run:```python selenium_tests.py``` 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This script will execute the Selenium tests and provide logs about the test results.
 
-### Analyzing the Bundle Size
+### Note
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Ensure that you have started the application using `npm start` on your local machine before running `selenium_tests.py` to avoid any connection issues during testing.
