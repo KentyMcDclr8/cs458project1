@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Project Setup and Testing Instructions
 
 ## Setup Instructions
@@ -51,6 +50,3 @@ This script will execute the Selenium tests and provide logs about the test resu
 ### Note
 
 Ensure that you have started the application using `npm start` on your local machine before running `selenium_tests.py` to avoid any connection issues during testing.
-=======
-# CS458-002: Software Validation and Verification Project 1
->>>>>>> 559884bc2c0aaae74600f62d17d2b4904cfe6069
