@@ -42,6 +42,7 @@ function solarDistanceCalculator(coords) {
 function DistanceToSunPage() {
   const [location, setLocation] = useState({ lat: "", lng: "" });
   const [distance, setDistance] = useState(null);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -67,23 +68,32 @@ function DistanceToSunPage() {
   const handleLocationChange = (event) => {
     const { name, value } = event.target;
     setLocation((prev) => ({ ...prev, [name]: value }));
+    setError(""); // Clear any previous error when the user starts typing
+  };
+
+  const validateCoordinates = (lat, lng) => {
+    if (isNaN(lat) || isNaN(lng)) {
+      return "Coordinates must be numeric.";
+    }
+    if (lat < -90 || lat > 90) {
+      return "Latitude must be between -90 and 90 degrees.";
+    }
+    if (lng < -180 || lng > 180) {
+      return "Longitude must be between -180 and 180 degrees.";
+    }
+    return "";
   };
 
   const calculateDistance = () => {
     const lat = parseFloat(location.lat);
     const lng = parseFloat(location.lng);
-    if (
-      !isNaN(lat) &&
-      !isNaN(lng) &&
-      lat >= -90 &&
-      lat <= 90 &&
-      lng >= -180 &&
-      lng <= 180
-    ) {
+    const validationResult = validateCoordinates(lat, lng);
+    if (validationResult === "") {
       const calculatedDistance = solarDistanceCalculator({ lat, lng });
       setDistance(calculatedDistance);
     } else {
-      alert("Please enter valid latitude and longitude values.");
+      setError(validationResult);
+      setDistance(null);
     }
   };
 
@@ -96,7 +106,6 @@ function DistanceToSunPage() {
     localStorage.removeItem("userEmail");
     navigate("/");
   };
-
   return (
     <React.Fragment>
       <AppBar position="static" sx={{ width: "100%" }}>
@@ -180,6 +189,11 @@ function DistanceToSunPage() {
               >
                 Calculate Distance
               </Button>
+              {error && (
+                <Typography color="error" sx={{ mt: 2 }}>
+                  {error}
+                </Typography>
+              )}
               <Typography sx={{ mt: 2, fontSize: 14, color: "text.secondary" }}>
                 Your GPS Coordinates:{" "}
                 {location.lat && location.lng
