@@ -15,40 +15,32 @@ import {
 import PublicIcon from "@mui/icons-material/Public"; // Icon for going to sea page
 import LogoutIcon from "@mui/icons-material/Logout"; // Logout icon
 import { useNavigate } from "react-router-dom";
-import { Water } from "@mui/icons-material";
 
-function solarDistanceCalculator(date, coords) {
+function solarDistanceCalculator(coords) {
   const averageDistanceToSun = 149600000; // Average distance from Earth to the Sun in kilometers
-  const orbitalVariation = 5000000; // Maximum variation in distance due to the elliptical orbit in kilometers
+  if (!coords || coords.lat == null || coords.lng == null) {
+    return NaN; // Return NaN if coordinates are invalid
+  }
 
-  // Correct calculation of the day of the year
-  const startOfYear = new Date(date.getFullYear(), 0, 0);
-  const diff = date - startOfYear;
-  const oneDay = 1000 * 60 * 60 * 24;
-  const dayOfYear = Math.floor(diff / oneDay);
+  // Coordinates must be numeric and within valid ranges
+  if (
+    isNaN(coords.lat) ||
+    isNaN(coords.lng) ||
+    coords.lat < -90 ||
+    coords.lat > 90 ||
+    coords.lng < -180 ||
+    coords.lng > 180
+  ) {
+    return NaN;
+  }
 
-  // Sinusoidal adjustment based on the day of the year to simulate Earth's elliptical orbit
-  const distanceAdjustment =
-    Math.cos((dayOfYear / 365) * 2 * Math.PI) * orbitalVariation;
-
-  // Simulated geographic adjustment based on latitude and longitude (not scientifically accurate)
-  // Latitude affects the perceived 'tilt' towards or away from the Sun, altering perceived solar intensity.
-  const latitudeAdjustment =
-    coords && coords.lat ? (coords.lat / 90.0) * 100000 : 0;
-
-  // Longitude could be used to simulate the rotational position of Earth relative to the Sun at midday
-  const longitudeAdjustment =
-    coords && coords.lng ? (coords.lng / 180.0) * 50000 : 0;
-
-  return (
-    averageDistanceToSun +
-    distanceAdjustment -
-    latitudeAdjustment -
-    longitudeAdjustment
-  );
+  // Calculate the distance (simplified for the example, without date considerations)
+  const latitudeAdjustment = (coords.lat / 90.0) * 100000; // Simulated adjustment
+  return averageDistanceToSun - latitudeAdjustment;
 }
+
 function DistanceToSunPage() {
-  const [location, setLocation] = useState({ lat: null, lng: null });
+  const [location, setLocation] = useState({ lat: "", lng: "" });
   const [distance, setDistance] = useState(null);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -59,23 +51,41 @@ function DistanceToSunPage() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setLocation({ lat: latitude, lng: longitude });
-          const calculatedDistance = solarDistanceCalculator(new Date(), {
-            lat: latitude,
-            lng: longitude,
-          });
-          setDistance(calculatedDistance); // Keep the distance in full kilometers
+          setLocation({ lat: latitude.toString(), lng: longitude.toString() });
         },
         (error) => {
           console.error("Geolocation error:", error);
-          setDistance(solarDistanceCalculator(new Date(), null)); // Calculate without coordinates if error
+          setLocation({ lat: "", lng: "" }); // Clear fields if there is an error
         }
       );
     } else {
       console.error("Geolocation not supported");
-      setDistance(solarDistanceCalculator(new Date(), null)); // Calculate without coordinates
+      setLocation({ lat: "", lng: "" }); // Clear fields if geolocation is not supported
     }
   }, []);
+
+  const handleLocationChange = (event) => {
+    const { name, value } = event.target;
+    setLocation((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const calculateDistance = () => {
+    const lat = parseFloat(location.lat);
+    const lng = parseFloat(location.lng);
+    if (
+      !isNaN(lat) &&
+      !isNaN(lng) &&
+      lat >= -90 &&
+      lat <= 90 &&
+      lng >= -180 &&
+      lng <= 180
+    ) {
+      const calculatedDistance = solarDistanceCalculator({ lat, lng });
+      setDistance(calculatedDistance);
+    } else {
+      alert("Please enter valid latitude and longitude values.");
+    }
+  };
 
   const goToSea = () => {
     navigate("/nearest-sea");
@@ -92,15 +102,12 @@ function DistanceToSunPage() {
       <AppBar position="static" sx={{ width: "100%" }}>
         <Toolbar
           sx={{
-            justifyContent: "center", // Center buttons horizontally
-            "& > *": {
-              maxWidth: 250, // Max width for each button
-              flexGrow: 1,
-            },
+            justifyContent: "center",
+            "& > *": { maxWidth: 250, flexGrow: 1 },
           }}
         >
           <Button
-            startIcon={<Water />}
+            startIcon={<PublicIcon />}
             variant="outlined"
             color="inherit"
             onClick={goToSea}
@@ -143,19 +150,49 @@ function DistanceToSunPage() {
                   color: "white",
                   padding: theme.spacing(1),
                   borderRadius: theme.shape.borderRadius,
+                  mb: 2,
                 }}
               >
                 Distance to the Sun's Core
               </Typography>
-              <Typography sx={{ fontSize: 14, color: "text.secondary", mb: 2 }}>
+              <TextField
+                label="Latitude"
+                variant="outlined"
+                name="lat"
+                value={location.lat}
+                onChange={handleLocationChange}
+                sx={{ mb: 2 }}
+                fullWidth
+              />
+              <TextField
+                label="Longitude"
+                variant="outlined"
+                name="lng"
+                value={location.lng}
+                onChange={handleLocationChange}
+                sx={{ mb: 2 }}
+                fullWidth
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={calculateDistance}
+              >
+                Calculate Distance
+              </Button>
+              <Typography sx={{ mt: 2, fontSize: 14, color: "text.secondary" }}>
                 Your GPS Coordinates:{" "}
                 {location.lat && location.lng
-                  ? `${location.lat.toFixed(2)}, ${location.lng.toFixed(2)}`
-                  : "Unavailable"}
+                  ? `${parseFloat(location.lat).toFixed(2)}, ${parseFloat(
+                      location.lng
+                    ).toFixed(2)}`
+                  : "Not set"}
               </Typography>
               <Typography variant="body1">
                 Distance:{" "}
-                {distance ? `${distance.toFixed(2)} km` : "Calculating..."}
+                {distance
+                  ? `${distance.toFixed(2)} km`
+                  : "Please enter coordinates"}
               </Typography>
             </CardContent>
           </Card>

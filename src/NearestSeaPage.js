@@ -96,9 +96,9 @@ function NearestSeaPage() {
       <AppBar position="static" sx={{ width: "100%" }}>
         <Toolbar
           sx={{
-            justifyContent: "center", // Center buttons horizontally
+            justifyContent: "center",
             "& > *": {
-              maxWidth: 250, // Max width for each button
+              maxWidth: 250,
               flexGrow: 1,
             },
           }}
