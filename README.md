@@ -8,12 +8,11 @@ Ensure that npm is installed on your local machine. If not, install it from [npm
 
 ### Step 2: Install Dependencies
 
-After installing npm, run the following command in your project directory to install the necessary dependencies:```npm install```
+After installing npm, run the following command in your project directory to install the necessary dependencies:`npm install`
 
 ### Step 3: Start the Application
 
-To start the application, run: ``` npm start```
-
+To start the application, run: ` npm start`
 
 ### Step 4: Open the Application
 
@@ -24,6 +23,7 @@ Open a web browser and go to `localhost:3000` to view the application.
 Use the following credentials for testing:
 
 - **Email Login:**
+
   - EMAIL: `name@mail.com`
   - PASSWORD: `password`
 
@@ -35,15 +35,15 @@ Use the following credentials for testing:
 
 ### Step 1: Install Selenium and Python
 
-Ensure that Python and Selenium are installed on your local machine. If not, follow the instructions to install Python from [Python's official website](https://www.python.org/downloads/) and Selenium using pip:```pip install selenium``` 
+Ensure that Python and Selenium are installed on your local machine. If not, follow the instructions to install Python from [Python's official website](https://www.python.org/downloads/) and Selenium using pip:`pip install selenium`
 
 ### Step 2: Start the Application
 
-Make sure that your application is running locally by executing: ``` npm start``` 
+Make sure that your application is running locally by executing: ` npm start`
 
 ### Step 3: Run Selenium Tests
 
-Navigate to the directory containing `selenium_tests.py` and run:```python selenium_tests.py``` 
+Navigate to the directory containing `selenium_tests.py` and run:`python selenium_tests.py`
 
 This script will execute the Selenium tests and provide logs about the test results.
 

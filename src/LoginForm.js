@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';
-import { GoogleLogin } from '@react-oauth/google';
-import './App.css';
-import { onSignIn } from './onSignIn';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { GoogleLogin } from "@react-oauth/google";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Alert,
+  Card,
+  CardContent,
+  CssBaseline,
+} from "@mui/material";
+import { onSignIn } from "./onSignIn";
 
 function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -17,60 +28,114 @@ function LoginForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setErrorMessage(""); // Reset error messages on new submission
 
     if (!email || !password) {
-      alert('Please fill in all fields.');
+      setErrorMessage("Please fill in all fields.");
       return;
     }
     if (!validateEmail(email)) {
-      alert('Please enter a valid email address.');
+      setErrorMessage("Please enter a valid email address.");
       return;
     }
     if (onSignIn(email, password)) {
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userEmail', email);
-      navigate('/success'); // Navigate to success page
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userEmail", email);
+      navigate("/distance-to-sun"); // Navigate to success page
     } else {
-      alert('Invalid email address or password. Please try again.');
+      setErrorMessage("Invalid email address or password. Please try again.");
     }
   };
 
   const handleGoogleLogin = (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
-    const email = decoded.email
-    console.log(decoded);
-    if (decoded.email_verified && onSignIn(email)) {
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userEmail', email);
-      navigate('/success'); // Navigate to success page
-    } else {
-      alert('User account does not exist for this Gmail. Please try again.');
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
+      if (decoded.email_verified && onSignIn(decoded.email)) {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userEmail", decoded.email);
+        navigate("/distance-to-sun"); // Navigate to success page
+      } else {
+        setErrorMessage(
+          "User account does not exist for this Gmail. Please try again."
+        );
+      }
+    } catch (error) {
+      console.error("Login Failed: ", error);
+      setErrorMessage("Login Failed. Please try again.");
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="input-group">
-          <label htmlFor="email">Email Address</label>
-          <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <div className="input-group">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)} />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      <div id='google_login_button'>
-      <GoogleLogin
-        onSuccess={credentialResponse => handleGoogleLogin(credentialResponse)}
-        onError={() => {
-          console.log('Login Failed');
-        }}
-      />
-      </div>
-    </div>
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CssBaseline />
+      <Card sx={{ minWidth: 275, width: "100%" }}>
+        <CardContent>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Typography variant="h4" component="h1" gutterBottom>
+              Login
+            </Typography>
+            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+            <form onSubmit={handleSubmit} noValidate>
+              <TextField
+                label="Email Address"
+                type="email"
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                label="Password"
+                type="password"
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{ mt: 2, mb: 2 }}
+              >
+                Login
+              </Button>
+            </form>
+            <GoogleLogin
+              onSuccess={(credentialResponse) =>
+                handleGoogleLogin(credentialResponse)
+              }
+              onError={() =>
+                setErrorMessage("Google login failed. Please try again.")
+              }
+              useOneTap
+            />
+          </Box>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
 
