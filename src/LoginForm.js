@@ -96,6 +96,7 @@ function LoginForm() {
               <TextField
                 label="Email Address"
                 type="email"
+                id="email"
                 fullWidth
                 variant="outlined"
                 margin="normal"
@@ -106,6 +107,7 @@ function LoginForm() {
               <TextField
                 label="Password"
                 type="password"
+                id="password"
                 fullWidth
                 variant="outlined"
                 margin="normal"
@@ -115,6 +117,7 @@ function LoginForm() {
               />
               <Button
                 type="submit"
+                id="login"
                 variant="contained"
                 color="primary"
                 fullWidth

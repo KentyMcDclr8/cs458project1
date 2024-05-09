@@ -184,6 +184,7 @@ function DistanceToSunPage() {
               />
               <Button
                 variant="contained"
+                id="sun_button"
                 color="primary"
                 onClick={calculateDistance}
               >

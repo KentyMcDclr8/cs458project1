@@ -80,6 +80,9 @@ class LoginTestCases(unittest.TestCase):
         """Test that the app retrieves and displays GPS coordinates and calculates distance when location services are enabled."""
         logging.info("Test: Location Enabled")
         try:
+            self.driver.find_element(By.ID, "email").send_keys("name@mail.com")
+            self.driver.find_element(By.ID, "password").send_keys("password")
+            self.driver.find_element(By.XPATH, "//button[contains(text(), 'Login')]").click()
             self.driver.get("http://localhost:3000/nearest-sea")
             coordinates_display = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Your GPS Coordinates')]"))
@@ -104,6 +107,9 @@ class LoginTestCases(unittest.TestCase):
         # Reinitialize the driver with these options
         self.driver.quit()  # First, close the existing driver
         self.driver = webdriver.Chrome(options=chrome_options)
+        self.driver.find_element(By.ID, "email").send_keys("name@mail.com")
+        self.driver.find_element(By.ID, "password").send_keys("password")
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Login')]").click()
         self.driver.get("http://localhost:3000/nearest-sea")
 
         # Check for the presence of the error message
@@ -115,6 +121,9 @@ class LoginTestCases(unittest.TestCase):
     def test_distance_calculation_accuracy(self):
         """Check if the calculated distance changes and is correct after changing location."""
         
+        self.driver.find_element(By.ID, "email").send_keys("name@mail.com")
+        self.driver.find_element(By.ID, "password").send_keys("password")
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Login')]").click()
         self.driver.get("http://localhost:3000/nearest-sea")
         
         initial_distance = WebDriverWait(self.driver, 10).until(
@@ -216,7 +225,7 @@ class LoginTestCases(unittest.TestCase):
         # Log out
         self.driver.find_element(By.XPATH, "//button[contains(text(), 'Logout')]").click()
         WebDriverWait(self.driver, 10).until(
-            EC.url_to_be("http://localhost:3000/login")
+            EC.url_to_be("http://localhost:3000/")
         )
 
     def test_access_after_logout_nearest_sea(self):
@@ -278,7 +287,10 @@ class LoginTestCases(unittest.TestCase):
     def test_location_disabled_distance_to_sun(self):
         """Test that the app still loads with empty coordinate fields when location is disabled."""
         # Simulate location disabled by rejecting the alert
-        self.driver.get("http://localhost:3000/distance-to-sun")
+        self.driver.find_element(By.ID, "email").send_keys("name@mail.com")
+        self.driver.find_element(By.ID, "password").send_keys("password")
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Login')]").click()
+        WebDriverWait(self.driver, 10).until(EC.url_to_be("http://localhost:3000/distance-to-sun"))
         WebDriverWait(self.driver, 10).until(
             EC.alert_is_present()
         )
@@ -293,11 +305,14 @@ class LoginTestCases(unittest.TestCase):
         
     def test_location_enabled_distance_to_sun(self):
         """Test distance calculation on manual entry of valid coordinates."""
-        self.driver.get("http://localhost:3000/distance-to-sun")
+        self.driver.find_element(By.ID, "email").send_keys("name@mail.com")
+        self.driver.find_element(By.ID, "password").send_keys("password")
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Login')]").click()
+        WebDriverWait(self.driver, 10).until(EC.url_to_be("http://localhost:3000/distance-to-sun"))
         # Manually enter valid coordinates
         self.driver.find_element(By.NAME, "lat").send_keys("45")
         self.driver.find_element(By.NAME, "lng").send_keys("90")
-        self.driver.find_element(By.TAG_NAME, "button").click()  # Assuming button to calculate
+        self.driver.find_element(By.ID, "sun_button").click()  # Assuming button to calculate
         
         # Check if distance is calculated and displayed
         distance = self.driver.find_element(By.XPATH, "//p[contains(text(), 'Distance')]").text
@@ -305,11 +320,14 @@ class LoginTestCases(unittest.TestCase):
 
     def test_manual_entry_valid_coordinates_distance_to_sun(self):
         """Test distance calculation on manual entry of valid coordinates."""
-        self.driver.get("http://localhost:3000/distance-to-sun")
+        self.driver.find_element(By.ID, "email").send_keys("name@mail.com")
+        self.driver.find_element(By.ID, "password").send_keys("password")
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Login')]").click()
+        WebDriverWait(self.driver, 10).until(EC.url_to_be("http://localhost:3000/distance-to-sun"))
         # Manually enter valid coordinates
         self.driver.find_element(By.NAME, "lat").send_keys("45")
         self.driver.find_element(By.NAME, "lng").send_keys("90")
-        self.driver.find_element(By.TAG_NAME, "button").click()  # Assuming button to calculate
+        self.driver.find_element(By.ID, "sun_button").click()  # Assuming button to calculate
         
         # Check if distance is calculated and displayed
         distance = self.driver.find_element(By.XPATH, "//p[contains(text(), 'Distance')]").text
@@ -317,7 +335,10 @@ class LoginTestCases(unittest.TestCase):
 
     def test_invalid_longitude_values(self):
         """Test error message for longitude values outside the valid range (-180 to 180)."""
-        self.driver.get("http://localhost:3000/distance-to-sun")
+        self.driver.find_element(By.ID, "email").send_keys("name@mail.com")
+        self.driver.find_element(By.ID, "password").send_keys("password")
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Login')]").click()
+        WebDriverWait(self.driver, 10).until(EC.url_to_be("http://localhost:3000/distance-to-sun"))
 
         # Assume login is already handled and you are at the required page
         WebDriverWait(self.driver, 10).until(
@@ -327,14 +348,17 @@ class LoginTestCases(unittest.TestCase):
         self.driver.find_element(By.NAME, "lat").send_keys("45")  # Valid latitude
         self.driver.find_element(By.NAME, "lng").clear()
         self.driver.find_element(By.NAME, "lng").send_keys("200")  # Invalid longitude
-        self.driver.find_element(By.TAG_NAME, "button").click()  # Assuming a button to calculate
+        self.driver.find_element(By.ID, "sun_button").click()  # Assuming a button to calculate
 
         error_message = self.driver.find_element(By.CSS_SELECTOR, "p[color='error']").text
         self.assertIn("Longitude must be between -180 and 180 degrees.", error_message)
 
     def test_invalid_latitude_values(self):
         """Test error message for latitude values outside the valid range (-90 to 90)."""
-        self.driver.get("http://localhost:3000/distance-to-sun")
+        self.driver.find_element(By.ID, "email").send_keys("name@mail.com")
+        self.driver.find_element(By.ID, "password").send_keys("password")
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Login')]").click()
+        WebDriverWait(self.driver, 10).until(EC.url_to_be("http://localhost:3000/distance-to-sun"))
 
         # Assume login is already handled and you are at the required page
         WebDriverWait(self.driver, 10).until(
@@ -345,14 +369,17 @@ class LoginTestCases(unittest.TestCase):
         self.driver.find_element(By.NAME, "lat").send_keys("100")  # Invalid latitude
         self.driver.find_element(By.NAME, "lng").clear()
         self.driver.find_element(By.NAME, "lng").send_keys("90")  # Valid longitude
-        self.driver.find_element(By.TAG_NAME, "button").click()
+        self.driver.find_element(By.ID, "sun_button").click()
 
         error_message = self.driver.find_element(By.CSS_SELECTOR, "p[color='error']").text
         self.assertIn("Latitude must be between -90 and 90 degrees.", error_message)
 
     def test_string_values_in_coordinates(self):
         """Test error message when entering string values in coordinate fields."""
-        self.driver.get("http://localhost:3000/distance-to-sun")
+        self.driver.find_element(By.ID, "email").send_keys("name@mail.com")
+        self.driver.find_element(By.ID, "password").send_keys("password")
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Login')]").click()
+        WebDriverWait(self.driver, 10).until(EC.url_to_be("http://localhost:3000/distance-to-sun"))
 
         # Assume login is already handled and you are at the required page
         WebDriverWait(self.driver, 10).until(
@@ -362,7 +389,7 @@ class LoginTestCases(unittest.TestCase):
         self.driver.find_element(By.NAME, "lat").send_keys("ninety")  # String instead of numeric latitude
         self.driver.find_element(By.NAME, "lng").clear()
         self.driver.find_element(By.NAME, "lng").send_keys("one eighty")  # String instead of numeric longitude
-        self.driver.find_element(By.TAG_NAME, "button").click()
+        self.driver.find_element(By.ID, "sun_button").click()
 
         error_message = self.driver.find_element(By.CSS_SELECTOR, "p[color='error']").text
         self.assertIn("Coordinates must be numeric.", error_message)
